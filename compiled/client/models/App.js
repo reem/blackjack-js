@@ -12,7 +12,13 @@
 
     App.prototype.initialize = function() {
       var game;
-      return this.set("game", game = new Game());
+      this.set("game", game = new Game());
+      return (this.get('game')).on('reset', (function(_this) {
+        return function() {
+          game.reset();
+          return _this.trigger('newGame');
+        };
+      })(this));
     };
 
     return App;

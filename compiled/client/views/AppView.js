@@ -14,12 +14,16 @@
       this.gameView = new GameView({
         model: this.model.get('game')
       });
-      return this.render();
+      this.render();
+      return this.model.on('newGame', ((function(_this) {
+        return function() {
+          return _this.render();
+        };
+      })(this)));
     };
 
     AppView.prototype.render = function() {
-      this.$el.append(this.gameView.render().el);
-      return console.log(this.$el.html());
+      return this.$el.append(this.gameView.render().el);
     };
 
     return AppView;

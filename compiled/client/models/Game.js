@@ -11,11 +11,52 @@
     }
 
     Game.prototype.initialize = function() {
-      var deck;
-      this.set('deck', deck = new Deck());
-      this.set('playerHand', deck.dealPlayer());
-      return this.set('dealerHand', deck.dealDealer());
+      return this.reset();
     };
+
+    Game.prototype.reset = function() {
+      this.deck = new Deck();
+      this.set('playerHand', this.deck.dealPlayer());
+      this.set('dealerHand', this.deck.dealDealer());
+      (this.get('playerHand')).on({
+        'bust': (function(_this) {
+          return function() {
+            alert("YOU LOSE!!12!!");
+            return _this.trigger('reset');
+          };
+        })(this)
+      });
+      (this.get('playerHand')).on({
+        'stand': (function(_this) {
+          return function() {
+            return (_this.get('dealerHand')).play(Math.max.apply(null, _this.get('playerHand').scores()));
+          };
+        })(this)
+      });
+      (this.get('dealerHand')).on({
+        'bust': (function(_this) {
+          return function() {
+            alert("YOU WIN!!12!!");
+            return _this.trigger('reset');
+          };
+        })(this)
+      });
+      (this.get('dealerHand')).on({
+        'dealerScore': (function(_this) {
+          return function(dealerScore) {
+            if (dealerScore < Math.max.apply(null, _this.get('playerHand').scores())) {
+              alert("YOU WIN!!12!!");
+            } else {
+              alert("YOU LOSE!!12!!");
+            }
+            return _this.trigger('reset');
+          };
+        })(this)
+      });
+      return this;
+    };
+
+    Game.prototype.dealerAction = function() {};
 
     return Game;
 
